@@ -25,11 +25,7 @@ static {
 
               try {
                   new LoginFrame();
-              } catch (FileNotFoundException e) {
-                  e.printStackTrace();
-              } catch (SQLException throwables) {
-                  throwables.printStackTrace();
-              } catch (NoSuchAlgorithmException e) {
+              } catch (FileNotFoundException | NoSuchAlgorithmException | SQLException e) {
                   e.printStackTrace();
               }
 
