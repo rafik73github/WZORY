@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="WZORY:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/WZORY_jar</output-path>
+    <root id="archive" name="WZORY.jar">
+      <element id="module-output" name="WZORY" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/mysql/mysql-connector-java/6.0.5/mysql-connector-java-6.0.5.jar" path-in-jar="/" />
+      <element id="library" level="project" name="mysql:mysql-connector-java:6.0.5" />
+    </root>
+  </artifact>
+</component>

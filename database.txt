@@ -1,0 +1,1 @@
+jdbc:mysql://localhost/lm?user=root&password=Rafaello73&serverTimezone=UTC&useSSL=false
