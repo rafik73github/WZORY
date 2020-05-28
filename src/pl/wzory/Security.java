@@ -7,7 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
+
 
 public class Security {
 
@@ -27,7 +27,7 @@ public class Security {
         }
         return hexString.toString();
     }
-
+//TODO Try check user another way, without read login & pass to strings
     public boolean userValidated(String userLoginFromForm, char[] userPassFromForm) throws NoSuchAlgorithmException, SQLException {
 
         ResultSet checkUserQuery = connLM.connectToDatabase("SELECT * FROM users WHERE user_login = '" + userLoginFromForm + "' LIMIT 1");

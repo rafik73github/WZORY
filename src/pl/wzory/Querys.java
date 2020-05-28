@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 
+//TODO I don't now if this class is necessary...
+
 
 public class Querys{
 
