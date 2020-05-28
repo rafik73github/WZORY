@@ -1,21 +1,18 @@
 package pl.wzory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.Scanner;
+import java.io.InputStream;
 
 public class MySQLConn {
 
-    Scanner openFile = new Scanner(new File("database.txt"));
+    InputStream fileStream = MySQLConn.class.getResourceAsStream("/database.txt");
+    Scanner openFile = new Scanner(fileStream);
     String connAuth = openFile.nextLine();
     String connectionURL = connAuth;
 
     Connection conn = null;
     ResultSet rs;
-
-    public MySQLConn() throws FileNotFoundException {
-    }
 
     public ResultSet connectToDatabase(String query) {
         try {
@@ -38,26 +35,31 @@ public class MySQLConn {
 
 
     public String[][] getMultiArray(ResultSet rs) throws SQLException {
+        String[][] dataE = {};
         rs.last();
         int lenRs = rs.getRow();
         rs.beforeFirst();
         int len = rs.getMetaData().getColumnCount();
 
         System.out.println("Columns: " + len + ", Rows: " + lenRs);
-
-        String[][] dataE = new String[lenRs][len];
-        try {
-          for(int j = 0; j< lenRs; j++){
-              if(rs.isLast()){break;}
-              rs.next();
-              for(int i = 0;i < len;i++){
-                  dataE[j][i] = rs.getString((rs.getMetaData().getColumnName(i+1)));
-              }
+        if (lenRs != 0) {
+            System.out.println(lenRs);
+            dataE = new String[lenRs][len];
+            try {
+                for (int j = 0; j < lenRs; j++) {
+                    if (rs.isLast()) {
+                        break;
+                    }
+                    rs.next();
+                    for (int i = 0; i < len; i++) {
+                        dataE[j][i] = rs.getString((rs.getMetaData().getColumnName(i + 1)));
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
           }
-          conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return dataE;
     }
 }

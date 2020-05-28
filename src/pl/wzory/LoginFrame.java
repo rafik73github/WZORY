@@ -5,17 +5,16 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Array;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 public class LoginFrame extends JFrame {
+    Security sec = new Security();
 
-    public LoginFrame() throws FileNotFoundException, SQLException, NoSuchAlgorithmException {
+    public LoginFrame() throws FileNotFoundException, SQLException {
 
     super("LOGOWANIE");
 
-    Querys dataQuery = new Querys();
+
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
@@ -51,29 +50,90 @@ public class LoginFrame extends JFrame {
         passLabel.setForeground(new Color(255,110,0));
         loginPanel.add(passLabel);
 
-    JTextArea loginText= new JTextArea();
+    JTextArea loginText = new JTextArea();
     loginText.setBounds(110,69,285,25);
     loginText.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
+        loginText.setTabSize(0);
     loginPanel.add(loginText);
 
-        JPasswordField passText= new JPasswordField();
+        JPasswordField passText = new JPasswordField();
         passText.setBounds(110,124,285,25);
         passText.setFont(new Font(Font.SERIF, Font.BOLD, 16));
         loginPanel.add(passText);
 
-    JButton logOK = new JButton("ZALOGUJ");
-        logOK.setBounds(0,190,243,60);
-        logOK.setFont(new Font(Font.SERIF, Font.BOLD, 16));
-        logOK.setBackground(new Color(70,130,180));
-        logOK.setForeground(new Color(255,255,255));
-    add(logOK);
+        JLabel monitLabel = new JLabel("",SwingConstants.CENTER);
+        monitLabel.setBounds(0,160,485,20);
+        monitLabel.setOpaque(true);
+        monitLabel.setBackground(new Color(255,0,0));
+        monitLabel.setFont(new Font(Font.SERIF, Font.BOLD, 16));
+        monitLabel.setForeground(new Color(255,255,255));
+        monitLabel.setVisible(false);
+        loginPanel.add(monitLabel);
 
-        JButton logCancel = new JButton("CANCEL");
-        logCancel.setBounds(243,190,242,60);
-        logCancel.setFont(new Font(Font.SERIF, Font.BOLD, 16));
-        logCancel.setBackground(new Color(220,20,60));
-        logCancel.setForeground(new Color(255,255,255));
-        add(logCancel);
+    JButton buttonLogOK = new JButton("ZALOGUJ");
+        buttonLogOK.setBounds(0,190,243,60);
+        buttonLogOK.setFont(new Font(Font.SERIF, Font.BOLD, 16));
+        buttonLogOK.setBackground(new Color(70,130,180));
+        buttonLogOK.setForeground(new Color(255,255,255));
+    add(buttonLogOK);
+
+        JButton buttonLogCancel = new JButton("CANCEL");
+        buttonLogCancel.setBounds(243,190,242,60);
+        buttonLogCancel.setFont(new Font(Font.SERIF, Font.BOLD, 16));
+        buttonLogCancel.setBackground(new Color(220,20,60));
+        buttonLogCancel.setForeground(new Color(255,255,255));
+        add(buttonLogCancel);
+
+        buttonLogOK.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean check = false;
+                String inputLoginText = loginText.getText();
+                char[] inputPassText = passText.getPassword();
+
+                if(inputLoginText.trim().equals("") && inputPassText.length == 0){
+                    monitLabel.setText("POLA 'LOGIN' I 'HASŁO' NIE MOGĄ BYĆ PUSTE !");
+                    monitLabel.setVisible(true);
+                }
+                else if(inputLoginText.trim().equals("")) {
+                    monitLabel.setText("POLE 'LOGIN' NIE MOŻE BYĆ PUSTE !");
+                    monitLabel.setVisible(true);
+                }
+                else if(inputPassText.length == 0){
+                        monitLabel.setText("POLE 'HASŁO' NIE MOŻE BYĆ PUSTE !");
+                        monitLabel.setVisible(true);
+                }else {
+                    monitLabel.setText("");
+                    if(monitLabel.isVisible()){monitLabel.setVisible(false);}
+                    try {
+                        check = sec.userValidated(inputLoginText, inputPassText);
+                    } catch (NoSuchAlgorithmException | SQLException noSuchAlgorithmException) {
+                        noSuchAlgorithmException.printStackTrace();
+                    }
+                    if(!check){
+                        monitLabel.setText("NIEWŁAŚCIWY LOGIN LUB HASŁO !");
+                        if(!monitLabel.isVisible()){monitLabel.setVisible(true);}
+                    }
+                    else{
+                        loginText.setText("");
+                        passText.setText("");
+                        dispose();
+                        new TestFrame();
+                    }
+                }
+
+                System.out.println(check);
+            }
+        });
+
+        buttonLogCancel.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              System.exit(0);
+            }
+        });
 
     }
 }
