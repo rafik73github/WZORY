@@ -83,9 +83,9 @@ public class MySQLConn {
             // for Linux & OSX
             cmd = "ping -c 1 " + host;
         }
-        Process myProceess = Runtime.getRuntime().exec(cmd);
-        myProceess.waitFor();
-         if (myProceess.exitValue() == 0) {
+        Process myProcess = Runtime.getRuntime().exec(cmd);
+        myProcess.waitFor();
+         if (myProcess.exitValue() == 0) {
 
              return true;
          }else{
