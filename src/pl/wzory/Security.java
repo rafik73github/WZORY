@@ -1,6 +1,5 @@
 package pl.wzory;
 
-import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,7 +12,7 @@ public class Security {
 
     MySQLConn connLM = new MySQLConn();
 
-    public Security() throws FileNotFoundException, SQLException {
+    public Security() {
     }
 
     public String hashMeString(String str) throws NoSuchAlgorithmException {
@@ -27,21 +26,22 @@ public class Security {
         }
         return hexString.toString();
     }
-//TODO Try check user another way, without read login & pass to strings
-    public boolean userValidated(String userLoginFromForm, char[] userPassFromForm) throws NoSuchAlgorithmException, SQLException {
 
-        ResultSet checkUserQuery = connLM.connectToDatabase("SELECT * FROM users WHERE user_login = '" + userLoginFromForm + "' LIMIT 1");
+    public boolean userValidated(String userLoginFromForm, char[] userPassFromForm) throws NoSuchAlgorithmException, SQLException {
+        String userPassFromFormSHA256 = hashMeString(new String(userPassFromForm));
+
+        ResultSet checkUserQuery = connLM.connectToDatabase("SELECT * FROM users WHERE" +
+                " user_login = '" + userLoginFromForm + "'AND user_pass = '" + userPassFromFormSHA256 + "' LIMIT 1");
+
         String[][] aList = (connLM.getMultiArray(checkUserQuery));
         boolean result = false;
-        if(aList.length != 0) {
-            String userLoginFromQuery = aList[0][1];
-            String userPassFromQuery = aList[0][2];
-            String userPassFromFormSHA256 = hashMeString(new String(userPassFromForm));
 
-            if (userLoginFromForm.equals(userLoginFromQuery) && (userPassFromFormSHA256.equals(userPassFromQuery))) {
-                result = true;
-            }
-        }
+        if(aList.length != 0) {
+            //String userLoginFromQuery = aList[0][1];
+            //String userPassFromQuery = aList[0][2];
+            result = true;
+                 }
+
         return result;
     }
 }

@@ -3,18 +3,14 @@ package pl.wzory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class LoginFrame extends JFrame {
     Security sec = new Security();
 
-    public LoginFrame() throws FileNotFoundException, SQLException {
-
-    super("LOGOWANIE");
-
-
+    public LoginFrame() {
+    //super("LOGOWANIE");
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
@@ -84,48 +80,103 @@ public class LoginFrame extends JFrame {
         buttonLogCancel.setForeground(new Color(255,255,255));
         add(buttonLogCancel);
 
-        buttonLogOK.addActionListener(new ActionListener() {
 
+        loginText.addKeyListener(new KeyAdapter() {
+         @Override
+
+         public void keyPressed(KeyEvent e) {
+         if (e.getKeyCode() == KeyEvent.VK_TAB) {
+         if (e.getModifiersEx() > 0) {
+           loginText.transferFocusBackward();
+           } else {
+             loginText.transferFocus();
+         }
+           e.consume();
+           }
+
+             if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                 buttonLogOK.doClick();
+                 e.consume();
+             }
+
+             if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                 buttonLogCancel.doClick();
+                 e.consume();
+             }
+
+         }
+         });
+
+        passText.addKeyListener(new KeyAdapter() {
+        @Override
+
+        public void keyPressed(KeyEvent e) {
+            if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                buttonLogOK.doClick();
+                e.consume();
+            }
+
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                buttonLogCancel.doClick();
+                e.consume();
+            }
+
+        }
+        });
+
+        buttonLogOK.addKeyListener(new KeyAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                boolean check = false;
-                String inputLoginText = loginText.getText();
-                char[] inputPassText = passText.getPassword();
 
-                if(inputLoginText.trim().equals("") && inputPassText.length == 0){
-                    monitLabel.setText("POLA 'LOGIN' I 'HASŁO' NIE MOGĄ BYĆ PUSTE !");
-                    monitLabel.setVisible(true);
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    buttonLogCancel.doClick();
+                    e.consume();
                 }
-                else if(inputLoginText.trim().equals("")) {
-                    monitLabel.setText("POLE 'LOGIN' NIE MOŻE BYĆ PUSTE !");
-                    monitLabel.setVisible(true);
-                }
-                else if(inputPassText.length == 0){
-                        monitLabel.setText("POLE 'HASŁO' NIE MOŻE BYĆ PUSTE !");
-                        monitLabel.setVisible(true);
-                }else {
-                    monitLabel.setText("");
-                    if(monitLabel.isVisible()){monitLabel.setVisible(false);}
-                    try {
-                        check = sec.userValidated(inputLoginText, inputPassText);
-                    } catch (NoSuchAlgorithmException | SQLException noSuchAlgorithmException) {
-                        noSuchAlgorithmException.printStackTrace();
-                    }
-                    if(!check){
-                        monitLabel.setText("NIEWŁAŚCIWY LOGIN LUB HASŁO !");
-                        if(!monitLabel.isVisible()){monitLabel.setVisible(true);}
-                    }
-                    else{
-                        loginText.setText("");
-                        passText.setText("");
-                        dispose();
-                        new TestFrame();
-                    }
-                }
-
-                System.out.println(check);
             }
         });
+
+        buttonLogOK.addActionListener(e -> {
+            boolean check = false;
+            String inputLoginText = loginText.getText();
+            char[] inputPassText = passText.getPassword();
+
+            if(inputLoginText.trim().equals("") && inputPassText.length == 0){
+                monitLabel.setText("POLA 'LOGIN' I 'HASŁO' NIE MOGĄ BYĆ PUSTE !");
+                monitLabel.setVisible(true);
+            }
+            else if(inputLoginText.trim().equals("")) {
+                monitLabel.setText("POLE 'LOGIN' NIE MOŻE BYĆ PUSTE !");
+                monitLabel.setVisible(true);
+            }
+            else if(inputPassText.length == 0){
+                    monitLabel.setText("POLE 'HASŁO' NIE MOŻE BYĆ PUSTE !");
+                    monitLabel.setVisible(true);
+            }else {
+                monitLabel.setText("");
+                if(monitLabel.isVisible()){monitLabel.setVisible(false);}
+                try {
+                    check = sec.userValidated(inputLoginText, inputPassText);
+                } catch (NoSuchAlgorithmException | SQLException noSuchAlgorithmException) {
+                    noSuchAlgorithmException.printStackTrace();
+                }
+                if(!check){
+                    monitLabel.setText("NIEWŁAŚCIWY LOGIN LUB HASŁO !");
+                    if(!monitLabel.isVisible()){monitLabel.setVisible(true);}
+                }
+                else{
+                    loginText.setText("");
+                    passText.setText("");
+                    dispose();
+                    try {
+                        new TestFrame();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+            }
+            System.out.println(check);
+        });
+
 
         buttonLogCancel.addActionListener(new ActionListener() {
 

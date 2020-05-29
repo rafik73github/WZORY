@@ -1,23 +1,15 @@
 package pl.wzory;
 
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
-import java.awt.EventQueue;
 
+import java.awt.EventQueue;
+import java.sql.SQLException;
 
 
 public class Main {
 
-    public static void main(String[] args) {
-    EventQueue.invokeLater(() -> {
-
-        try {
-            new LoginFrame();
-        } catch (FileNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-
-    });
+    public static void main(String[] args) throws SQLException {
+    EventQueue.invokeLater(LoginFrame::new);
+        new TestFrame();
 
     }
 }

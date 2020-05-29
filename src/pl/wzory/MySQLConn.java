@@ -55,11 +55,45 @@ public class MySQLConn {
                         dataE[j][i] = rs.getString((rs.getMetaData().getColumnName(i + 1)));
                     }
                 }
-                conn.close();
+               // conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
           }
         return dataE;
+    }
+    public String[] getColumnNames(ResultSet rs) throws SQLException{
+        String[] result = {};
+        int len = rs.getMetaData().getColumnCount();
+        result = new String[len];
+            for (int i = 0; i < len; i++) {
+                result[i] = rs.getMetaData().getColumnName(i + 1);
+            }
+
+        return result;
+    }
+
+    public boolean isInternetConn(String host){
+     try{
+        String cmd = "";
+        if(System.getProperty("os.name").startsWith("Windows")){
+            // for Windows
+            cmd = "ping -n 1 " + host;
+        }else{
+            // for Linux & OSX
+            cmd = "ping -c 1 " + host;
+        }
+        Process myProceess = Runtime.getRuntime().exec(cmd);
+        myProceess.waitFor();
+         if (myProceess.exitValue() == 0) {
+
+             return true;
+         }else{
+             return false;
+         }
+         }catch(Exception e) {
+         e.printStackTrace();
+         return false;
+     }
     }
 }
